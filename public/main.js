@@ -4,7 +4,7 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 import { assignSensorLabels, clearAllSensors, drawSensorsAndUpdateGlobalValues, loadSensorCoordinates, sensorMaterial } from "../js/draw_sensors.js";
 import "regenerator-runtime/runtime.js";
 import { addLightAndBackground } from "../js/add_light_and_background";
-import { loadAndDrawCortexModel, handleTransformControlChangeEvent, updateTransformControlHistory } from "../js/draw_cortex.js";
+import { loadAndDrawCortexModel, loadAndDrawCortexDualModel, handleTransformControlChangeEvent, updateTransformControlHistory } from "../js/draw_cortex.js";
 import { clearLoadAndDrawSensors,
   loadAndAssignSensorLabels } from '../js/draw_sensors.js';
 import {
@@ -121,6 +121,7 @@ async function generateSceneElements() {
   addLightAndBackground();
   scene.add( transformControls );
   loadAndDrawCortexModel();
+  // loadAndDrawCortexDualModel();
   const data = await loadSensorCoordinates(sensorCoordinatesUrl);
   await drawSensorsAndUpdateGlobalValues(data);
   await loadAndAssignSensorLabels(sensorLabelsUrl);

@@ -34,6 +34,55 @@ function loadAndDrawCortexModel(){
         .then((response) => drawExtraItemModel(response));
 }
 
+function drawExtraItemModelWithOffset(geometry, newPosition) {
+    console.log('Drawing model with offset:', newPosition);
+    
+    if (!geometry) {
+        console.error('ERROR: Geometry is null or undefined.');
+        return;
+    }
+
+    let position = newPosition;  // Use the provided offset position
+    let rotation = initExtraItemRotation;
+    let scale = initExtraItemScale;
+
+    console.log("222 position:", position);
+    console.log("222 rotation:", rotation);
+    console.log("222 scale:", scale);
+
+    const extraItemMesh = new THREE.Mesh(geometry, cortexMaterial);
+    extraItemMesh.geometry.computeVertexNormals();
+
+    // Apply the new position
+    extraItemMesh.position.set(position.x, position.y, position.z);
+    extraItemMesh.rotation.set(rotation.x, rotation.y, rotation.z);
+    extraItemMesh.scale.set(scale.x, scale.y, scale.z);
+    
+    scene.add(extraItemMesh);
+    console.log("Added second cortex model at:", extraItemMesh.position);
+}
+
+
+function loadAndDrawCortexDualModel() {
+    loadCortexModel()
+        .then((geometry) => {
+            console.log("Drawing first cortex model");
+            drawExtraItemModel(geometry); // First model at the default position
+        });
+
+    loadCortexModel()
+        .then((geometry) => {
+            console.log("Drawing second cortex model at a new position");
+            const clonedGeometry = geometry.clone();
+
+            // Move second brain to the left
+            const offsetPosition = new Vector3(initExtraItemPosition.x - 200, initExtraItemPosition.y, initExtraItemPosition.z);
+            drawExtraItemModelWithOffset(clonedGeometry, offsetPosition);
+        });
+}
+
+
+
 function drawExtraItemInnerSkullModel(){
     loadInnerSkullModel().then((response) => drawExtraItemModel(response));
 }
@@ -69,16 +118,26 @@ function loadScalpModel(){
     return loadGltfModel(scalpMeshUrl, 'Scalp model');
 }
 
-function drawExtraItemModel(geometry){
+function drawExtraItemModel(geometry) {
+    
+    console.log('geometry', geometry);
+    
     let position = initExtraItemPosition;
     let rotation = initExtraItemRotation;
     let scale = initExtraItemScale;
+
+    
     if (extraItemMesh){
         position = extraItemMesh.position.clone();
         rotation = extraItemMesh.rotation.clone();
         scale = extraItemMesh.scale.clone();
         removeExtraItemMesh();
     }
+
+    console.log("444 position:", position);
+    console.log("444 rotation:", rotation);
+    console.log("444 scale:", scale);
+
     extraItemMesh = new THREE.Mesh( geometry, cortexMaterial );
     extraItemMesh.geometry.computeVertexNormals();
     updateExtraItemMeshVisibility();
@@ -155,6 +214,9 @@ function updateExtraItemMesh(){
     if (guiParams.extraItemMeshShape == 'cube'){
         drawExtraItemCubeModel();
     }
+    if (guiParams.extraItemMeshShape == 'dualBrain') {
+        loadAndDrawCortexDualModel();
+    }
 }
 
 function toggleTransformControls(mode){
@@ -211,6 +273,7 @@ function undoTransformControls(){
 
 export {
     loadAndDrawCortexModel,
+    loadAndDrawCortexDualModel,
     drawExtraItemSphereModel,
     updateExtraItemMeshVisibility as updateBrainMeshVisibility,
     hideExtraItem,

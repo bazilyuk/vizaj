@@ -228,7 +228,7 @@ function setupGui() {
     extraItemFolder.addColor(guiParams, 'colorExtraItem').name('Color').onChange(updateExtraItemMaterial).listen();
     extraItemFolder.add(guiParams, 'resetExtraItemColor').name('Reset color');
     extraItemFolder.add(guiParams, 'extraItemMeshShape',
-        ['brain', 'scalp', 'innerSkull', 'sphere', 'cube'])
+        ['brain', 'scalp', 'innerSkull', 'sphere', 'cube', 'dualBrain'])
         .name('Shape').onChange(updateExtraItemMesh);
     const moveExtraItemFolder = extraItemFolder.addFolder('Move support');
     moveExtraItemFolder.add(guiParams, 'translateModeTransformControls').name('Translate');
